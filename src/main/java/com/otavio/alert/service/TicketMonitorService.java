@@ -2,12 +2,12 @@ package com.otavio.alert.service;
 
 import com.otavio.alert.browser.FielTorcedorBrowser;
 import com.otavio.alert.notifier.TelegramNotifier;
-import com.otavio.alert.scraper.CorinthiansPartidasScraper;
+import com.otavio.alert.scraper.MeuTimaoJogosScraper;
 
 public class TicketMonitorService {
 
-    private final CorinthiansPartidasScraper partidasScraper =
-            new CorinthiansPartidasScraper();
+    private final MeuTimaoJogosScraper meuTimaoScraper =
+            new MeuTimaoJogosScraper();
 
     private final FielTorcedorBrowser fielTorcedorBrowser =
             new FielTorcedorBrowser();
@@ -20,13 +20,7 @@ public class TicketMonitorService {
 
     public void executar() {
 
-        String jogosCorinthians =
-                partidasScraper.buscarJogosEmSaoPaulo();
-
-        enviarSeForNovo(
-                "corinthians-site",
-                "📅 Jogos oficiais do Corinthians em São Paulo:\n\n" + jogosCorinthians
-        );
+        meuTimaoScraper.verificarJogosEmSaoPaulo();
 
         String proximosJogosFiel =
                 fielTorcedorBrowser.buscarProximosJogosPublicos();
@@ -41,12 +35,12 @@ public class TicketMonitorService {
 
         String id = prefixo + "-" + mensagem.hashCode();
 
-        if (historyService.jaFoiEnviado(id)) {
-            System.out.println("Alerta já enviado: " + prefixo);
-            return;
-        }
+//        if (historyService.jaFoiEnviado(id)) {
+//            System.out.println("Alerta já enviado: " + prefixo);
+//            return;
+//        }
 
-        notifier.enviarMensagem(mensagem);
-        historyService.salvarComoEnviado(id);
+//        notifier.enviarMensagem(mensagem);
+//        historyService.salvarComoEnviado(id);
     }
 }

@@ -9,7 +9,10 @@ public class CorinthiansAlertApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(CorinthiansAlertApplication.class, args);
+        SpringApplication.run(
+                CorinthiansAlertApplication.class,
+                args
+        );
 
         TicketMonitorService service =
                 new TicketMonitorService();
