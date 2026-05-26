@@ -10,6 +10,7 @@ public class AlertHistoryService {
     private static final Path HISTORY_FILE =
             Path.of("sent-alerts.txt");
 
+
     public boolean jaFoiEnviado(String id) {
         try {
             if (!Files.exists(HISTORY_FILE)) {

@@ -1,6 +1,6 @@
 package com.otavio.alert;
 
-import com.otavio.alert.browser.FielTorcedorBrowser;
+import com.otavio.alert.service.TicketMonitorService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,9 +11,9 @@ public class CorinthiansAlertApplication {
 
         SpringApplication.run(CorinthiansAlertApplication.class, args);
 
-        FielTorcedorBrowser browser =
-                new FielTorcedorBrowser();
+        TicketMonitorService service =
+                new TicketMonitorService();
 
-        browser.abrirSite();
+        service.executar();
     }
 }

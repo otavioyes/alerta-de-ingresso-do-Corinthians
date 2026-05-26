@@ -1,81 +1,59 @@
 package com.otavio.alert.browser;
 
 import com.microsoft.playwright.*;
-import com.otavio.alert.notifier.TelegramNotifier;
-import com.otavio.alert.service.AlertHistoryService;
-
-import java.nio.file.Paths;
 
 public class FielTorcedorBrowser {
 
-    public void abrirSite() {
+    private static final String URL =
+            "https://www.fieltorcedor.com.br/";
+
+    public String buscarProximosJogosPublicos() {
 
         try (Playwright playwright = Playwright.create()) {
 
-            BrowserContext context = playwright.chromium()
-                    .launchPersistentContext(
-                            Paths.get("browser-data"),
-                            new BrowserType.LaunchPersistentContextOptions()
-                                    .setHeadless(false)
-                    );
+            Browser browser = playwright.chromium().launch(
+                    new BrowserType.LaunchOptions()
+                            .setHeadless(false)
+            );
 
-            Page page = context.newPage();
+            Page page = browser.newPage();
 
-            page.navigate("https://www.fieltorcedor.com.br/jogos/");
-
-            /*TEMPO QUE O SITE FICA ABERTO: 0min*/
+            page.navigate(URL);
             page.waitForLoadState();
-
-            System.out.println("Página aberta!");
-            System.out.println("URL atual:");
-            System.out.println(page.url());
 
             String pageText = page.locator("body").innerText();
 
-            String[] jogos = pageText.split("X\\nCORINTHIANS");
+            browser.close();
 
-            TelegramNotifier notifier = new TelegramNotifier();
-            AlertHistoryService historyService = new AlertHistoryService();
+            return extrairProximosJogos(pageText);
 
-            for (String jogo : jogos) {
-
-                String bloco = "CORINTHIANS" + jogo;
-
-                boolean temCompra =
-                        bloco.contains("COMPRE AGORA");
-
-                boolean emSaoPaulo =
-                        bloco.contains("NEO QUIMICA ARENA") ||
-                                bloco.contains("NEO QUÍMICA ARENA");
-
-                if (temCompra && emSaoPaulo) {
-
-                    if (!historyService.jaFoiEnviado(bloco)) {
-
-                        System.out.println("🚨 Jogo em São Paulo encontrado:");
-                        System.out.println("--------------------------------");
-                        System.out.println(bloco);
-
-                        String linkCompra = page.url();
-
-                        notifier.enviarMensagem(
-                                "🚨 Ingresso Corinthians disponível em São Paulo!\n\n"
-                                        + bloco
-                                        + "\n\n🎟️ Comprar ingresso:\n"
-                                        + linkCompra
-                        );
-
-                        historyService.salvarComoEnviado(bloco);
-
-                        System.out.println("--------------------------------");
-
-                    } else {
-                        System.out.println("Alerta já enviado anteriormente.");
-                    }
-                }
-            }
-
-            context.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erro ao buscar próximos jogos no Fiel Torcedor.";
         }
+    }
+
+    private String extrairProximosJogos(String texto) {
+
+        int inicio = texto.indexOf("PRÓXIMOS JOGOS");
+
+        if (inicio == -1) {
+            return "Nenhuma seção PRÓXIMOS JOGOS encontrada.\n\nFonte: " + URL;
+        }
+
+        int fim = texto.indexOf("Clube social do Corinthians", inicio);
+
+        if (fim == -1) {
+            fim = texto.indexOf("Fale conosco", inicio);
+        }
+
+        if (fim == -1) {
+            fim = texto.length();
+        }
+
+        String proximosJogos =
+                texto.substring(inicio, fim).trim();
+
+        return proximosJogos + "\n\n🎟️ Fonte: " + URL;
     }
 }
