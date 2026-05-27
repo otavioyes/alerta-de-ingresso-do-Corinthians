@@ -1,26 +1,39 @@
 package com.otavio.alert;
 
-import com.otavio.alert.service.TicketMonitorService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
  * Classe principal da aplicação.
  *
- * Responsável por iniciar o Spring Boot
- * e executar o serviço de monitoramento
- * dos jogos/ingressos do Corinthians.
+ * Responsável por:
+ * 1. Inicializar o Spring Boot.
+ * 2. Ativar o sistema de agendamentos automáticos.
+ * 3. Manter o robô rodando continuamente.
  */
 @SpringBootApplication
+
+/*
+ * Habilita o scheduler do Spring Boot.
+ *
+ * Isso permite utilizar:
+ * @Scheduled
+ *
+ * para executar tarefas automáticas
+ * em intervalos definidos.
+ */
+@EnableScheduling
 public class CorinthiansAlertApplication {
 
     /*
-     * Método principal da aplicação.
+     * Metodo principal da aplicação.
      *
      * Fluxo:
-     * 1. Inicializa o Spring Boot.
-     * 2. Cria o serviço principal do robô.
-     * 3. Executa a verificação dos jogos.
+     * 1. Inicializa o contexto Spring Boot.
+     * 2. Carrega componentes da aplicação.
+     * 3. Inicia o scheduler automático.
+     * 4. Mantém o robô em execução contínua.
      */
     public static void main(String[] args) {
 
@@ -31,17 +44,5 @@ public class CorinthiansAlertApplication {
                 CorinthiansAlertApplication.class,
                 args
         );
-
-        /*
-         * Cria instância do serviço principal
-         * responsável pelo monitoramento.
-         */
-        TicketMonitorService service =
-                new TicketMonitorService();
-
-        /*
-         * Executa o robô de verificação.
-         */
-        service.executar();
     }
 }
