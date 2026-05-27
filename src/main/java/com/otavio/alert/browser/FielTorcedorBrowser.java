@@ -99,7 +99,7 @@ public class FielTorcedorBrowser {
 
                 String mensagem =
                         "🚨 Jogo do Corinthians em São Paulo!\n\n"
-                                + jogo
+                                + formatarJogo(jogo)
                                 + "\n\n✅ Ingressos disponíveis"
                                 + "\n\n🎟️ Fonte:\n"
                                 + URL;
@@ -154,10 +154,64 @@ public class FielTorcedorBrowser {
 
     private String formatarJogo(String jogo) {
 
-        String texto =
-                jogo.replace("COMPRE AGORA", "")
-                        .trim();
+        String[] linhas = jogo.split("\\R");
 
-        return texto;
+        String titulo = "";
+        String campeonato = "";
+        String rodada = "";
+        String dataHora = "";
+        String local = "";
+
+        for (String linha : linhas) {
+
+            linha = linha.trim();
+
+            if (linha.startsWith("CORINTHIANS X")) {
+                titulo = linha;
+            }
+
+            if (linha.contains("LIBERTADORES") ||
+                    linha.contains("BRASILEIRO") ||
+                    linha.contains("PAULISTA") ||
+                    linha.contains("COPA")) {
+                campeonato = linha;
+            }
+
+            if (linha.startsWith("Rodada")) {
+                rodada = linha;
+            }
+
+            if (linha.contains("às")) {
+                dataHora = linha;
+            }
+
+            if (linha.contains("NEO QUIMICA ARENA") ||
+                    linha.contains("NEO QUÍMICA ARENA")) {
+                local = linha;
+            }
+        }
+
+        String dia = "";
+        String horario = "";
+
+        if (!dataHora.isBlank()) {
+            String[] partes = dataHora.split("às");
+
+            dia = partes[0]
+                    .replace("Data", "")
+                    .trim();
+
+            if (partes.length > 1) {
+                horario = partes[1].trim();
+            }
+        }
+
+        return "PRÓXIMOS JOGOS:\n"
+                + titulo + "\n"
+                + "Dia: " + dia + "\n"
+                + "Horário: " + horario + "\n"
+                + "Local: " + local + "\n"
+                + campeonato + "\n"
+                + rodada;
     }
 }
