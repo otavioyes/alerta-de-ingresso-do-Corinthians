@@ -15,7 +15,7 @@ public class TicketScheduler {
 
     /*
      * Executa a cada 5 minutos.
-     * 30000 ms = 5 minutos.
+     * 300000 ms = 5 minutos.
      */
     @Scheduled(fixedRate = 300000)
     public void verificarIngressos() {

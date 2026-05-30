@@ -190,8 +190,18 @@ public class FielTorcedorBrowser {
 
         return text.contains("neo quimica arena") ||
                 text.contains("neo química arena") ||
+
+                text.contains("ginásio wlamir marques") ||
+                text.contains("ginasio wlamir marques") ||
+
+                text.contains("fazendinha") ||
+
+                text.contains("parque são jorge") ||
+                text.contains("parque sao jorge") ||
+
                 text.contains("são paulo") ||
                 text.contains("sao paulo") ||
+
                 text.contains("pacaembu") ||
                 text.contains("morumbi") ||
                 text.contains("allianz parque") ||

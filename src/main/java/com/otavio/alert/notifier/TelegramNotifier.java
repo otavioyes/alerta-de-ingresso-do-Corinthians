@@ -100,7 +100,7 @@ public class TelegramNotifier {
                     (HttpURLConnection) url.openConnection();
 
             /*
-             * Define o método HTTP utilizado.
+             * Define o metodo HTTP utilizado.
              */
             connection.setRequestMethod("GET");
 
@@ -121,6 +121,7 @@ public class TelegramNotifier {
              * Encerra conexão HTTP.
              */
             connection.disconnect();
+
 
         } catch (IOException e) {
 
